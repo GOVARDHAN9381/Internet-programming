@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BlossomGifts</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#fff5f8;color:#333}
+header{background:#d81b60;color:white;text-align:center;padding:20px}
+nav{background:#ad1457;text-align:center;padding:12px}
+nav button{padding:10px 18px;margin:4px;border:0;border-radius:5px;
+cursor:pointer}
+section{display:none;width:90%;max-width:1050px;margin:25px auto}
+section.active{display:block}
+.card{background:white;padding:20px;margin:15px 0;border-radius:10px;
+box-shadow:0 2px 8px #ccc}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px}
+.box{text-align:center;padding:20px;background:white;border-radius:10px}
+.box h3{color:#d81b60}
+input,select{width:100%;padding:10px;margin:7px 0;
+border:1px solid #bbb;border-radius:5px}
+.btn{background:#d81b60;color:white;border:0;padding:10px 15px;
+border-radius:5px;cursor:pointer}
+.btn:hover{background:#ad1457}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+gap:20px}
+.product{background:white;padding:15px;text-align:center;
+border-radius:10px;box-shadow:0 2px 8px #ccc}
+.product img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+.price{font-weight:bold;color:#d81b60;font-size:18px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ddd;padding:10px}
+th{background:#d81b60;color:white}
+footer{background:#ad1457;color:white;text-align:center;padding:15px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🌸 BlossomGifts</h1>
+<p>Flowers & Gifts for Every Special Occasion</p>
+</header>
+
+<nav>
+<button onclick="show('home')">Home</button>
+<button onclick="show('products')">Products</button>
+<button onclick="show('order')">Order</button>
+<button onclick="show('track')">Track Order</button>
+<button onclick="show('login')">Login</button>
+<button onclick="show('admin')">Admin</button>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+
+<div class="card">
+<h2>Welcome to BlossomGifts 💐</h2>
+<p>
+Send beautiful flowers and thoughtful gifts to your loved ones.
+Choose products by occasion, recipient and price.
+</p>
+</div>
+
+<h2>Popular Categories</h2>
+
+<div class="grid">
+<div class="box">
+<h3>🌹 Flowers</h3>
+<p>Roses, Lilies, Bouquets</p>
+<button class="btn" onclick="show('products')">Shop</button>
+</div>
+
+<div class="box">
+<h3>🎁 Gift Baskets</h3>
+<p>Chocolate & Fruit Baskets</p>
+<button class="btn" onclick="show('products')">Shop</button>
+</div>
+
+<div class="box">
+<h3>🎂 Birthday</h3>
+<p>Birthday gifts and flowers</p>
+<button class="btn" onclick="show('products')">Shop</button>
+</div>
+
+<div class="box">
+<h3>❤️ Anniversary</h3>
+<p>Special romantic gifts</p>
+<button class="btn" onclick="show('products')">Shop</button>
+</div>
+
+<div class="box">
+<h3>🎉 Celebration</h3>
+<p>Gifts for every celebration</p>
+<button class="btn" onclick="show('products')">Shop</button>
+</div>
+
+<div class="box">
+<h3>💰 Under ₹1000</h3>
+<p>Affordable gifts</p>
+<button class="btn" onclick="show('products')">Shop</button>
+</div>
+</div>
+
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+
+<div class="card">
+<h2>Our Products</h2>
+
+<select id="category" onchange="filterProducts()">
+<option value="all">All Categories</option>
+<option value="flower">Flowers</option>
+<option value="gift">Gifts</option>
+<option value="birthday">Birthday</option>
+</select>
+
+</div>
+
+<div class="products">
+
+<div class="product" data-type="flower">
+<img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946">
+<h3>Rose Bouquet</h3>
+<p>Beautiful red roses</p>
+<p class="price">₹799</p>
+<button class="btn" onclick="order('Rose Bouquet',799)">Order</button>
+</div>
+
+<div class="product" data-type="flower">
+<img src="https://images.unsplash.com/photo-1520763185298-1b434c919102">
+<h3>Flower Basket</h3>
+<p>Colorful fresh flowers</p>
+<p class="price">₹999</p>
+<button class="btn" onclick="order('Flower Basket',999)">Order</button>
+</div>
+
+<div class="product" data-type="gift">
+<img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48">
+<h3>Gift Box</h3>
+<p>Premium gift collection</p>
+<p class="price">₹699</p>
+<button class="btn" onclick="order('Gift Box',699)">Order</button>
+</div>
+
+<div class="product" data-type="birthday">
+<img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d">
+<h3>Birthday Gift</h3>
+<p>Special birthday surprise</p>
+<p class="price">₹899</p>
+<button class="btn" onclick="order('Birthday Gift',899)">Order</button>
+</div>
+
+</div>
+</section>
+
+<!-- ORDER -->
+<section id="order">
+
+<div class="card">
+<h2>Place Your Order 🎁</h2>
+
+<input id="pname" placeholder="Product Name">
+<input id="customer" placeholder="Customer Name">
+<input id="phone" placeholder="Phone Number">
+
+<select>
+<option>Flower</option>
+<option>Gift Basket</option>
+<option>Personalized Gift</option>
+</select>
+
+<input type="date" id="date">
+<input type="time" id="time">
+<input placeholder="Delivery Address">
+
+<select>
+<option>Cash on Delivery</option>
+<option>UPI Payment</option>
+<option>Credit/Debit Card</option>
+</select>
+
+<button class="btn" onclick="placeOrder()">Place Order</button>
+
+<p id="orderMsg"></p>
+</div>
+
+</section>
+
+<!-- TRACK -->
+<section id="track">
+
+<div class="card">
+<h2>Track Your Order 🚚</h2>
+
+<input id="orderId" placeholder="Enter Order ID">
+
+<button class="btn" onclick="track()">Track Order</button>
+
+<div id="tracking"></div>
+</div>
+
+</section>
+
+<!-- LOGIN -->
+<section id="login">
+
+<div class="card">
+<h2>User Registration / Login</h2>
+
+<input placeholder="Full Name">
+<input placeholder="Email">
+<input type="password" placeholder="Password">
+
+<button class="btn" onclick="login()">Login / Register</button>
+
+<p id="loginMsg"></p>
+</div>
+
+</section>
+
+<!-- ADMIN -->
+<section id="admin">
+
+<div class="card">
+<h2>Admin Login</h2>
+
+<input placeholder="Admin Username">
+<input type="password" placeholder="Password">
+
+<button class="btn" onclick="login()">Login</button>
+</div>
+
+<div class="card">
+<h2>Manage Products</h2>
+
+<input id="newProduct" placeholder="Product Name">
+<input id="newPrice" placeholder="Price">
+
+<button class="btn" onclick="addProduct()">Add Product</button>
+</div>
+
+<div class="card">
+<h2>Product Information</h2>
+
+<table id="productTable">
+<tr>
+<th>Product</th>
+<th>Price</th>
+<th>Action</th>
+</tr>
+
+<tr>
+<td>Rose Bouquet</td>
+<td>₹799</td>
+<td>
+<button class="btn" onclick="removeRow(this)">Remove</button>
+</td>
+</tr>
+
+<tr>
+<td>Flower Basket</td>
+<td>₹999</td>
+<td>
+<button class="btn" onclick="removeRow(this)">Remove</button>
+</td>
+</tr>
+
+<tr>
+<td>Gift Box</td>
+<td>₹699</td>
+<td>
+<button class="btn" onclick="removeRow(this)">Remove</button>
+</td>
+</tr>
+
+</table>
+</div>
+
+<div class="card">
+<h2>Admin Functions</h2>
+<p>✔ Add new products</p>
+<p>✔ Remove products</p>
+<p>✔ Modify product prices</p>
+<p>✔ View product information</p>
+<p>✔ Manage customer orders</p>
+</div>
+
+</section>
+
+<footer>
+<p>© 2026 BlossomGifts | Flowers & Gifts Online</p>
+</footer>
+
+<script>
+
+function show(id){
+document.querySelectorAll("section")
+.forEach(x=>x.classList.remove("active"));
+
+document.getElementById(id).classList.add("active");
+}
+
+function order(name,price){
+document.getElementById("pname").value=name;
+show("order");
+}
+
+function placeOrder(){
+
+let name=document.getElementById("customer").value;
+let phone=document.getElementById("phone").value;
+
+if(name==""||phone==""){
+alert("Please enter customer details");
+return;
+}
+
+document.getElementById("orderMsg").innerHTML=
+"✅ Order placed successfully! Confirmation sent by SMS/Email.";
+}
+
+function track(){
+
+let id=document.getElementById("orderId").value;
+
+if(id==""){
+alert("Enter Order ID");
+return;
+}
+
+document.getElementById("tracking").innerHTML=
+"<div class='card'>"+
+"<h3>Order ID: "+id+"</h3>"+
+"<p>📦 Order Confirmed</p>"+
+"<p>🚚 Out for Delivery</p>"+
+"<p>🏠 Expected Delivery: Today</p>"+
+"</div>";
+}
+
+function login(){
+alert("Login successful!");
+}
+
+function addProduct(){
+
+let name=document.getElementById("newProduct").value;
+let price=document.getElementById("newPrice").value;
+
+if(name==""||price==""){
+alert("Enter product details");
+return;
+}
+
+let table=document.getElementById("productTable");
+let row=table.insertRow();
+
+row.insertCell(0).innerHTML=name;
+row.insertCell(1).innerHTML="₹"+price;
+row.insertCell(2).innerHTML=
+"<button class='btn' onclick='removeRow(this)'>Remove</button>";
+
+alert("Product added successfully");
+}
+
+function removeRow(btn){
+btn.parentElement.parentElement.remove();
+alert("Product removed");
+}
+
+function filterProducts(){
+
+let type=document.getElementById("category").value;
+let products=document.querySelectorAll(".product");
+
+products.forEach(function(p){
+
+if(type=="all"||p.dataset.type==type)
+p.style.display="block";
+else
+p.style.display="none";
+
+});
+}
+
+</script>
+
+</body>
+</html>

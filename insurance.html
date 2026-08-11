@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>InsureEasy</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#eef5ff;color:#222}
+header{background:#1565c0;color:white;text-align:center;padding:20px}
+nav{background:#0d47a1;text-align:center;padding:12px}
+nav button{padding:10px 18px;margin:4px;border:0;border-radius:5px;cursor:pointer}
+section{display:none;width:90%;max-width:1000px;margin:25px auto}
+section.active{display:block}
+.card{background:white;padding:20px;margin:15px 0;border-radius:10px;
+box-shadow:0 2px 8px #bbb}
+input,select,textarea{width:100%;padding:10px;margin:7px 0;
+border:1px solid #aaa;border-radius:5px}
+.btn{background:#1565c0;color:white;border:0;padding:10px 15px;
+border-radius:5px;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid #ccc;padding:10px}
+th{background:#1565c0;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px}
+.box{text-align:center;background:white;padding:20px;border-radius:10px}
+footer{text-align:center;background:#0d47a1;color:white;padding:15px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🛡️ InsureEasy</h1>
+<p>Online Insurance Management System</p>
+</header>
+
+<nav>
+<button onclick="show('home')">Home</button>
+<button onclick="show('admin')">Admin</button>
+<button onclick="show('agent')">Agent</button>
+<button onclick="show('user')">User</button>
+<button onclick="show('policy')">Policies</button>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+<div class="card">
+<h2>Welcome to InsureEasy</h2>
+<p>
+InsureEasy helps customers compare insurance policies, manage policies,
+pay premiums, submit claims and receive renewal reminders.
+</p>
+</div>
+
+<div class="grid">
+<div class="box"><h3>🏥 Health</h3><p>Family health protection</p></div>
+<div class="box"><h3>🚗 Auto</h3><p>Vehicle insurance</p></div>
+<div class="box"><h3>🏠 Home</h3><p>Home protection</p></div>
+</div>
+</section>
+
+<!-- ADMIN -->
+<section id="admin">
+<div class="card">
+<h2>Admin Login</h2>
+<input placeholder="Username">
+<input type="password" placeholder="Password">
+<button class="btn" onclick="msg('Admin login successful')">Login</button>
+</div>
+
+<div class="card">
+<h2>Approve Agents</h2>
+<table>
+<tr><th>Name</th><th>Email</th><th>Status</th><th>Action</th></tr>
+<tr>
+<td>Rahul</td><td>rahul@gmail.com</td>
+<td id="a1">Pending</td>
+<td><button class="btn" onclick="approve('a1')">Approve</button></td>
+</tr>
+<tr>
+<td>Priya</td><td>priya@gmail.com</td>
+<td id="a2">Pending</td>
+<td><button class="btn" onclick="approve('a2')">Approve</button></td>
+</tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Agent Details & Commission</h2>
+<table>
+<tr><th>ID</th><th>Agent</th><th>Customers</th><th>Commission</th></tr>
+<tr><td>A101</td><td>Rahul</td><td>12</td><td>₹18,000</td></tr>
+<tr><td>A102</td><td>Priya</td><td>8</td><td>₹12,500</td></tr>
+</table>
+</div>
+</section>
+
+<!-- AGENT -->
+<section id="agent">
+<div class="card">
+<h2>Agent Registration / Login</h2>
+<input placeholder="Agent Name">
+<input placeholder="Email">
+<input type="password" placeholder="Password">
+<button class="btn" onclick="msg('Agent login successful')">Login</button>
+</div>
+
+<div class="card">
+<h2>Create Customer</h2>
+<input id="cname" placeholder="Customer Name">
+<input id="phone" placeholder="Phone Number">
+<select id="ptype">
+<option>Health Insurance</option>
+<option>Auto Insurance</option>
+<option>Home Insurance</option>
+</select>
+<button class="btn" onclick="addCustomer()">Add Customer</button>
+</div>
+
+<div class="card">
+<h2>Customer Details</h2>
+<table id="customers">
+<tr><th>Name</th><th>Phone</th><th>Policy</th><th>Alert</th></tr>
+<tr>
+<td>Arun</td><td>9876543210</td><td>Health</td>
+<td><button class="btn" onclick="sms()">Send SMS</button></td>
+</tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Manage Policy</h2>
+<input placeholder="Policy Number">
+<select>
+<option>Health Insurance</option>
+<option>Auto Insurance</option>
+<option>Home Insurance</option>
+</select>
+<input placeholder="Premium Amount">
+<input type="date">
+<button class="btn" onclick="msg('Policy saved successfully')">Save Policy</button>
+</div>
+</section>
+
+<!-- USER -->
+<section id="user">
+<div class="card">
+<h2>User Login</h2>
+<input placeholder="Email">
+<input type="password" placeholder="Password">
+<button class="btn" onclick="msg('User login successful')">Login</button>
+</div>
+
+<div class="card">
+<h2>My Policies</h2>
+<table>
+<tr><th>Policy</th><th>Type</th><th>Premium</th><th>Due Date</th></tr>
+<tr><td>INS1001</td><td>Health</td><td>₹12,000</td><td>20-08-2026</td></tr>
+<tr><td>INS1002</td><td>Auto</td><td>₹8,500</td><td>10-09-2026</td></tr>
+</table>
+</div>
+
+<div class="grid">
+<div class="box">
+<h3>💳 Payment</h3>
+<p>Pay premium</p>
+<button class="btn" onclick="msg('Premium paid successfully')">Pay</button>
+</div>
+
+<div class="box">
+<h3>📄 Claim</h3>
+<textarea id="claim" placeholder="Claim details"></textarea>
+<button class="btn" onclick="msg('Claim submitted successfully')">
+Submit
+</button>
+</div>
+
+<div class="box">
+<h3>🔔 SMS Alert</h3>
+<p>Renewal reminder</p>
+<button class="btn" onclick="sms()">Send Alert</button>
+</div>
+</div>
+</section>
+
+<!-- POLICY -->
+<section id="policy">
+<div class="card">
+<h2>Compare Policies</h2>
+<table>
+<tr><th>Policy</th><th>Coverage</th><th>Premium</th><th>Action</th></tr>
+<tr>
+<td>Health Plus</td><td>₹10 Lakhs</td><td>₹12,000</td>
+<td><button class="btn" onclick="selectP('Health Plus')">Select</button></td>
+</tr>
+<tr>
+<td>Auto Secure</td><td>₹5 Lakhs</td><td>₹8,500</td>
+<td><button class="btn" onclick="selectP('Auto Secure')">Select</button></td>
+</tr>
+<tr>
+<td>Home Protect</td><td>₹20 Lakhs</td><td>₹15,000</td>
+<td><button class="btn" onclick="selectP('Home Protect')">Select</button></td>
+</tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Personalized Recommendation</h2>
+<select id="need">
+<option>Family</option>
+<option>Vehicle Owner</option>
+<option>Home Owner</option>
+</select>
+<button class="btn" onclick="recommend()">Recommend</button>
+<p id="result"></p>
+</div>
+</section>
+
+<footer>
+© 2026 InsureEasy | Insurance Management System
+</footer>
+
+<script>
+function show(id){
+document.querySelectorAll("section").forEach(x=>x.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+function msg(text){alert(text)}
+
+function approve(id){
+document.getElementById(id).innerHTML="Approved";
+alert("Agent approved successfully");
+}
+
+function sms(){
+alert("SMS reminder sent to policyholder!");
+}
+
+function selectP(name){
+alert(name+" policy selected!");
+}
+
+function addCustomer(){
+let n=document.getElementById("cname").value;
+let p=document.getElementById("phone").value;
+let t=document.getElementById("ptype").value;
+
+if(n==""||p==""){
+alert("Enter customer details");
+return;
+}
+
+let table=document.getElementById("customers");
+let row=table.insertRow();
+row.insertCell(0).innerHTML=n;
+row.insertCell(1).innerHTML=p;
+row.insertCell(2).innerHTML=t;
+row.insertCell(3).innerHTML=
+'<button class="btn" onclick="sms()">Send SMS</button>';
+
+alert("Customer added successfully");
+}
+
+function recommend(){
+let n=document.getElementById("need").value;
+let r="";
+
+if(n=="Family")
+r="Recommended: Health Plus Insurance";
+else if(n=="Vehicle Owner")
+r="Recommended: Auto Secure Insurance";
+else
+r="Recommended: Home Protect Insurance";
+
+document.getElementById("result").innerHTML=r;
+}
+</script>
+
+</body>
+</html>

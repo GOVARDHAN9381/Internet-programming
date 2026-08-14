@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxCalc - Employee Income Tax Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #064e3b; color: #ecfdf5; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #022c22; padding: 12px; gap: 12px; border-bottom: 1px solid #065f46; }
+    nav button { background: #065f46; color: #a7f3d0; border: 1px solid #047857; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #34d399, #10b981); color: #064e3b; border-color: transparent; box-shadow: 0 0 15px rgba(52, 211, 153, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #022c22; border: 1px solid #065f46; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #34d399; margin-bottom: 20px; border-bottom: 2px solid #065f46; padding-bottom: 10px; font-weight: 800; }
+    input { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #047857; border-radius: 8px; background: #064e3b; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(16,185,129,0.4); }
+    .res-box { background: #064e3b; border: 1px solid #047857; border-radius: 12px; padding: 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>💼 Employee Income Tax Calculator</h1>
+    <p>Automated Deductions Breakdown & Income Tax Slabs</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('emp')">Calculate Tax</button>
+    <button onclick="switchTab('norms')">Govt Tax Slabs & Norms</button>
+  </nav>
+
+  <div class="container">
+    <!-- CALCULATE TAX -->
+    <div id="emp" class="card active">
+      <h2>💵 Enter Monthly Financial Details</h2>
+      <form onsubmit="event.preventDefault(); calcTax();">
+        <input type="number" id="grossPay" placeholder="Monthly Gross Salary (₹)" required>
+        <input type="number" id="hra" placeholder="Monthly House Rent Allowance HRA (₹)" required>
+        <input type="number" id="pension" placeholder="Monthly Pension / PF Contribution (₹)">
+        <input type="number" id="healthIns" placeholder="Monthly Health Insurance Premium (₹)">
+        <button type="submit" class="btn">🧮 Calculate Tax Liability</button>
+      </form>
+
+      <div class="res-box" id="taxResult" style="display:none;">
+        <h3 style="color:#34d399;">🧾 Income Tax Liability Breakdown</h3>
+        <p style="margin-top:10px;">Annual Gross Salary: ₹ <span id="annGross">0</span></p>
+        <p style="margin-top:5px;">Total Deductions (Std 50k + HRA + Pension + Health): ₹ <span id="totalDed">0</span></p>
+        <p style="margin-top:5px; font-weight:700; color:#a7f3d0;">Net Taxable Income: ₹ <span id="netTaxable">0</span></p>
+        <h2 style="color:#f87171; border:none; margin-top:15px; font-size:24px;">Total Income Tax Payable: ₹ <span id="taxPayable">0</span></h2>
+      </div>
+    </div>
+
+    <!-- NORMS -->
+    <div id="norms" class="card">
+      <h2>📜 Government Tax Slabs & Rules</h2>
+      <div style="background:#064e3b; padding:20px; border-radius:12px; border:1px solid #047857; line-height:1.7;">
+        <p><strong>Standard Deduction:</strong> ₹ 50,000 (Flat)</p>
+        <p><strong>Max Pension Deduction:</strong> Up to ₹ 1,50,000</p>
+        <h3 style="margin-top:15px; color:#34d399;">Tax Slab Rates:</h3>
+        <p>• Up to ₹ 2,50,000: <strong>NIL (0%)</strong></p>
+        <p>• ₹ 2,50,001 to ₹ 5,00,000: <strong>5% of income above 2.5L</strong> (Nil if Net <= 5L)</p>
+        <p>• ₹ 5,00,001 to ₹ 10,00,000: <strong>₹ 12,500 + 20% of income above 5L</strong></p>
+        <p>• Above ₹ 10,00,000: <strong>₹ 1,12,500 + 30% of income above 10L</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function calcTax() {
+      let grossM = parseFloat(document.getElementById('grossPay').value) || 0;
+      let hraM = parseFloat(document.getElementById('hra').value) || 0;
+      let pensionM = parseFloat(document.getElementById('pension').value) || 0;
+      let healthM = parseFloat(document.getElementById('healthIns').value) || 0;
+
+      let annGross = grossM * 12;
+      let annHra = hraM * 12;
+      let annPension = Math.min(pensionM * 12, 150000);
+      let annHealth = healthM * 12;
+      let stdDed = 50000;
+
+      let totalDed = stdDed + annHra + annPension + annHealth;
+      let netTaxable = Math.max(0, annGross - totalDed);
+      let tax = 0;
+
+      if (netTaxable <= 500000) {
+        tax = 0;
+      } else {
+        if (netTaxable <= 500000) tax = (netTaxable - 250000) * 0.05;
+        else if (netTaxable <= 1000000) tax = 12500 + ((netTaxable - 500000) * 0.20);
+        else tax = 112500 + ((netTaxable - 1000000) * 0.30);
+      }
+
+      document.getElementById('annGross').innerText = annGross.toFixed(2);
+      document.getElementById('totalDed').innerText = totalDed.toFixed(2);
+      document.getElementById('netTaxable').innerText = netTaxable.toFixed(2);
+      document.getElementById('taxPayable').innerText = tax.toFixed(2);
+      document.getElementById('taxResult').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

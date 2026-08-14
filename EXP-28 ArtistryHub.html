@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArtistryHub - Emily Harris Fine Art Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0d0d0d; color: #e5e5e5; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), #2a1b0e; color: #d4af37; padding: 40px 20px; text-align: center; border-bottom: 2px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2); }
+    header h1 { font-family: 'Cinzel', serif; font-size: 36px; letter-spacing: 3px; font-weight: 800; }
+    header p { color: #e5c158; opacity: 0.9; margin-top: 5px; }
+    nav { display: flex; justify-content: center; background: #171717; padding: 12px; gap: 15px; border-bottom: 1px solid #262626; }
+    nav button { background: transparent; color: #d4af37; border: 1px solid #d4af37; padding: 10px 22px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: #d4af37; color: #0d0d0d; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); transform: translateY(-2px); }
+    .container { max-width: 950px; margin: 30px auto; padding: 0 20px; }
+    .card { background: #171717; border: 1px solid #262626; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { font-family: 'Cinzel', serif; color: #d4af37; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    .art-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
+    .art-item { background: #262626; border: 1px solid #333; border-radius: 12px; padding: 15px; text-align: center; transition: 0.3s; }
+    .art-item:hover { border-color: #d4af37; transform: translateY(-5px); box-shadow: 0 10px 25px rgba(212,175,55,0.2); }
+    .art-placeholder { height: 160px; background: linear-gradient(135deg, #4a3000, #8a6414); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ffd700; font-size: 20px; font-weight: bold; margin-bottom: 12px; }
+    input, textarea { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #333; border-radius: 8px; background: #0d0d0d; color: white; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: #d4af37; color: #0d0d0d; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { background: #f3e5ab; transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎨 Emily Harris Fine Art Studio</h1>
+    <p>Official Portfolio, International Exhibitions & Original Oil Paintings</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('home')">Homepage</button>
+    <button onclick="switchTab('bio')">Biography</button>
+    <button onclick="switchTab('portfolio')">Art Gallery</button>
+    <button onclick="switchTab('contact')">Inquiries & Store</button>
+  </nav>
+
+  <div class="container">
+    <!-- HOMEPAGE -->
+    <div id="home" class="card active">
+      <h2>✨ Welcome to the Private Gallery</h2>
+      <p style="line-height:1.7; color:#ccc;">Emily Harris is an internationally acclaimed fine artist whose work captures the interplay of light, emotion, and texture across oil and mixed media canvases.</p>
+      <div class="art-grid">
+        <div class="art-item">
+          <div class="art-placeholder">🖼️ Whispering Forest</div>
+          <h3 style="color:#d4af37;">Whispering Forest (2025)</h3>
+          <p style="color:#aaa; font-size:13px; margin-top:4px;">Oil on Canvas • 36" x 48"</p>
+        </div>
+        <div class="art-item">
+          <div class="art-placeholder">🌅 Golden Horizon</div>
+          <h3 style="color:#d4af37;">Golden Horizon (2026)</h3>
+          <p style="color:#aaa; font-size:13px; margin-top:4px;">Mixed Media • 40" x 60"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIOGRAPHY -->
+    <div id="bio" class="card">
+      <h2>👩‍🎨 About Emily Harris</h2>
+      <p style="line-height:1.7; color:#ccc;">Educated at the Royal Academy of Fine Arts in London, Emily has held over 25 solo exhibitions across New York, Paris, and Florence.</p>
+    </div>
+
+    <!-- ART GALLERY -->
+    <div id="portfolio" class="card">
+      <h2>🖌️ Complete Art Portfolio</h2>
+      <div class="art-grid">
+        <div class="art-item">
+          <div class="art-placeholder">🎨 Celestial Symphony</div>
+          <h3 style="color:#d4af37;">Celestial Symphony</h3>
+          <p style="color:#aaa; font-size:13px; margin-top:4px;">Acrylic on Linen • 2024</p>
+        </div>
+        <div class="art-item">
+          <div class="art-placeholder">🌊 Venetian Reflection</div>
+          <h3 style="color:#d4af37;">Venetian Reflection</h3>
+          <p style="color:#aaa; font-size:13px; margin-top:4px;">Oil on Wood • 2023</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT & STORE -->
+    <div id="contact" class="card">
+      <h2>📬 Commission Inquiries & Fine Art Prints</h2>
+      <form onsubmit="event.preventDefault(); alert('Inquiry Sent to Emily Harris Studio!');">
+        <input type="text" placeholder="Your Full Name" required>
+        <input type="email" placeholder="Your Email Address" required>
+        <textarea rows="4" placeholder="Inquiry details regarding original canvases or custom prints..." required></textarea>
+        <button type="submit" class="btn">✨ Send Studio Inquiry</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

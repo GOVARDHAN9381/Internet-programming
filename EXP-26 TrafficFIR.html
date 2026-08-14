@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Squad - E-Challan & FIR Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #0f172a; color: #f8fafc; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #1e293b; padding: 12px; gap: 12px; border-bottom: 1px solid #334155; }
+    nav button { background: #334155; color: #93c5fd; border: 1px solid #2563eb; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #60a5fa, #2563eb); color: white; border-color: transparent; box-shadow: 0 0 15px rgba(96, 165, 250, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #60a5fa; margin-bottom: 20px; border-bottom: 2px solid #334155; padding-bottom: 10px; font-weight: 800; }
+    input, select { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37,99,235,0.4); }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #334155; font-size: 14px; }
+    th { background: #334155; color: #60a5fa; font-weight: 700; }
+    .badge-paid { background: #10b981; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800; }
+    .badge-pending { background: #ef4444; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🚔 Traffic Police E-Challan & FIR Portal</h1>
+    <p>Real-Time Violation Filing, Proof Uploads & Fine Collections</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('user')">Vehicle Owner (Pay Fine)</button>
+    <button onclick="switchTab('police')">Traffic Officer Portal</button>
+    <button onclick="switchTab('admin')">Admin Daily Reports</button>
+  </nav>
+
+  <div class="container">
+    <!-- VEHICLE OWNER -->
+    <div id="user" class="card active">
+      <h2>🔍 Search Pending Challans & FIR Cases</h2>
+      <input type="text" id="vRegNo" placeholder="Enter Vehicle Registration No (e.g. TN-09-AX-8899)">
+      <button class="btn" onclick="searchChallan()">🔍 Search Violation Records</button>
+
+      <h3 style="margin-top:30px; color:#93c5fd;">My E-Challan History</h3>
+      <table>
+        <thead>
+          <tr><th>Challan No</th><th>Vehicle No</th><th>Offense</th><th>Fine</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody id="challanTable">
+          <tr><td>CHL-401</td><td>TN-09-AX-8899</td><td>Signal Jumping</td><td>₹ 1,000</td><td><span class="badge-pending">Unpaid</span></td><td><button onclick="payChallan('CHL-401', 1000)" style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;">Pay Fine</button></td></tr>
+          <tr><td>CHL-388</td><td>TN-09-AX-8899</td><td>No Helmet Violation</td><td>₹ 500</td><td><span class="badge-paid">Paid</span></td><td>-</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TRAFFIC OFFICER -->
+    <div id="police" class="card">
+      <h2>👮 Issue New Traffic E-Challan / FIR</h2>
+      <form onsubmit="event.preventDefault(); issueChallan();">
+        <input type="text" id="pVehNo" placeholder="Vehicle Registration No" required>
+        <select id="pRule" required>
+          <option value="Over Speeding (₹2000)">Over Speeding - ₹2,000</option>
+          <option value="Signal Jumping (₹1000)">Signal Jumping - ₹1,000</option>
+          <option value="No Helmet (₹500)">No Helmet - ₹500</option>
+          <option value="Drunk Driving (₹10000)">Drunk Driving - ₹10,000</option>
+        </select>
+        <input type="text" id="pLocation" placeholder="Junction / Highway Location" required>
+        <input type="file" id="pPhoto" accept="image/*">
+        <button type="submit" class="btn" style="background:linear-gradient(135deg, #ef4444, #dc2626);">🚨 File Traffic Offense & Issue FIR</button>
+      </form>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="admin" class="card">
+      <h2>📊 Police Administration Summary</h2>
+      <div style="background:#0f172a; padding:20px; border-radius:12px; border:1px solid #334155;">
+        <h3>Today's City Violations Summary</h3>
+        <p style="margin-top:8px;">Total Violations Logged Today: <strong style="color:#60a5fa;">248 Cases</strong></p>
+        <p style="margin-top:5px;">Total Fine Collected: <strong style="color:#34d399;">₹ 1,84,500</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function searchChallan() {
+      let no = document.getElementById('vRegNo').value;
+      if (no) alert(`Displaying violation records for ${no}`);
+    }
+    function payChallan(id, amt) {
+      alert(`Payment of ₹${amt} for Challan ${id} completed successfully!`);
+    }
+    function issueChallan() {
+      let veh = document.getElementById('pVehNo').value;
+      let rule = document.getElementById('pRule').value;
+      let id = 'CHL-' + Math.floor(100 + Math.random() * 900);
+      let row = `<tr><td>${id}</td><td>${veh}</td><td>${rule}</td><td>-</td><td><span class="badge-pending">Unpaid</span></td><td><button onclick="payChallan('${id}', 1000)" style="padding:6px 12px; background:#10b981; color:white; border:none; border-radius:6px; font-weight:700;">Pay Fine</button></td></tr>`;
+      document.getElementById('challanTable').innerHTML += row;
+      alert(`E-Challan ${id} Issued for Vehicle ${veh}!`);
+    }
+  </script>
+</body>
+</html>

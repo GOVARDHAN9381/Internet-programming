@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>On-Road Breakdown Assistance & Mechanic Finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #431407; color: #ffedd5; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #ea580c, #c2410c); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(234, 88, 12, 0.4); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #1c0a03; padding: 12px; gap: 12px; border-bottom: 1px solid #7c2d12; }
+    nav button { background: #7c2d12; color: #fed7aa; border: 1px solid #ea580c; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #fb923c, #ea580c); color: white; border-color: transparent; box-shadow: 0 0 15px rgba(251, 146, 60, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #1c0a03; border: 1px solid #7c2d12; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #fb923c; margin-bottom: 20px; border-bottom: 2px solid #7c2d12; padding-bottom: 10px; font-weight: 800; }
+    input, select { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #7c2d12; border-radius: 8px; background: #431407; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(234,88,12,0.4); }
+    .mech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
+    .mech-card { border: 1px solid #7c2d12; border-radius: 12px; padding: 20px; background: #431407; text-align: center; }
+    .status-approved { background: #10b981; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🔧 24/7 On-Road Breakdown Assistance</h1>
+    <p>Emergency Highway Mechanic Dispatch, GPS Location & Towing</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('user')">SOS Dispatch Request</button>
+    <button onclick="switchTab('mechanic')">Mechanic Registration</button>
+    <button onclick="switchTab('admin')">Admin License Approval</button>
+  </nav>
+
+  <div class="container">
+    <!-- SOS DISPATCH REQUEST -->
+    <div id="user" class="card active">
+      <h2>🚨 Emergency Nearby Mechanics</h2>
+      <input type="text" id="locSearch" placeholder="Enter Highway / City Location (e.g. NH-44, KM 45)">
+      <div class="mech-grid" id="mechList">
+        <div class="mech-card">
+          <h3>👨‍🔧 Express Auto Garage</h3>
+          <p style="color:#fdba74; font-size:13px; margin-top:5px;"><strong>Specialty:</strong> Engine, Flat Tire, Jump Start</p>
+          <p style="color:#fdba74; font-size:13px;">📍 NH44 Toll Road (1.5 km away)</p>
+          <p style="margin:10px 0;"><span class="status-approved">Verified & Licensed</span></p>
+          <button class="btn" style="background:linear-gradient(135deg, #ef4444, #dc2626);" onclick="requestAssistance('Express Auto Garage')">🆘 Request Emergency Mechanic</button>
+        </div>
+        <div class="mech-card">
+          <h3>🏍️ Speedo Two-Wheeler Repairs</h3>
+          <p style="color:#fdba74; font-size:13px; margin-top:5px;"><strong>Specialty:</strong> Bike Towing & Clutch Repair</p>
+          <p style="color:#fdba74; font-size:13px;">📍 Outer Ring Road (3.0 km away)</p>
+          <p style="margin:10px 0;"><span class="status-approved">Verified & Licensed</span></p>
+          <button class="btn" style="background:linear-gradient(135deg, #ef4444, #dc2626);" onclick="requestAssistance('Speedo Repairs')">🆘 Request Emergency Mechanic</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MECHANIC PORTAL -->
+    <div id="mechanic" class="card">
+      <h2>🛠️ Mechanic Registration & License</h2>
+      <div style="background:#431407; padding:20px; border-radius:12px; border:1px solid #7c2d12;">
+        <h3>Submit Garage for License Verification</h3>
+        <input type="text" id="mName" placeholder="Garage / Business Name">
+        <input type="text" id="mLoc" placeholder="Service Area / Location">
+        <input type="text" id="mSpec" placeholder="Specialties (Tires, Engine, Towing)">
+        <input type="text" id="mLic" placeholder="Trade License No">
+        <button class="btn" onclick="regMech()">📝 Submit for Verification</button>
+      </div>
+    </div>
+
+    <!-- ADMIN APPROVAL -->
+    <div id="admin" class="card">
+      <h2>⚖️ Admin Mechanic Verification Panel</h2>
+      <div id="pendingApprovals">
+        <div style="background:#431407; padding:15px; border:1px solid #7c2d12; border-radius:8px; margin-bottom:12px;">
+          <strong>Applicant:</strong> Apex Heavy Towing (Lic: LIC-9981)<br>
+          <span style="color:#fdba74; font-size:13px;">Location: Highway Bypass 12</span><br>
+          <button onclick="approveMech(this)" style="margin-top:10px; padding:8px 16px; background:#10b981; color:white; border:none; border-radius:6px; font-weight:800; cursor:pointer;">Approve License</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function requestAssistance(name) {
+      let issue = prompt(`Describe your vehicle issue for ${name}:`, "Engine stalling / Flat tire");
+      if (issue) alert(`🚨 SOS ALERT DISPATCHED!\n${name} received your location.\nMechanic arriving in ~15 mins.`);
+    }
+    function regMech() {
+      let name = document.getElementById('mName').value;
+      let lic = document.getElementById('mLic').value;
+      if (name && lic) alert(`Business "${name}" submitted for Verification!`);
+    }
+    function approveMech(btn) {
+      alert("Mechanic License Approved! Added to emergency network.");
+      btn.parentElement.remove();
+    }
+  </script>
+</body>
+</html>

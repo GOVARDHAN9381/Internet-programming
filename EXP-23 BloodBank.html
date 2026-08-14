@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeLine Blood Management Information System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #450a0a; color: #fecaca; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #dc2626, #991b1b); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #1f0404; padding: 12px; gap: 12px; border-bottom: 1px solid #7f1d1d; }
+    nav button { background: #7f1d1d; color: #fca5a5; border: 1px solid #dc2626; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #f87171, #dc2626); color: white; border-color: transparent; box-shadow: 0 0 15px rgba(248, 113, 113, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #1f0404; border: 1px solid #7f1d1d; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #f87171; margin-bottom: 20px; border-bottom: 2px solid #7f1d1d; padding-bottom: 10px; font-weight: 800; }
+    input, select { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #7f1d1d; border-radius: 8px; background: #450a0a; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(239,68,68,0.4); }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #7f1d1d; font-size: 14px; }
+    th { background: #7f1d1d; color: #f87171; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🩸 LifeLine Blood Bank & Donor Network</h1>
+    <p>Emergency Donor Search, Real-Time Blood Stock & Hospital Inventory</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('donor')">Donor Registration</button>
+    <button onclick="switchTab('search')">Search Donors & Banks</button>
+    <button onclick="switchTab('hospital')">Hospital Stock Manager</button>
+  </nav>
+
+  <div class="container">
+    <!-- DONOR PORTAL -->
+    <div id="donor" class="card active">
+      <h2>🩸 Register as Voluntary Donor</h2>
+      <form onsubmit="event.preventDefault(); regDonor();">
+        <input type="text" id="dName" placeholder="Full Donor Name" required>
+        <select id="dGroup" required>
+          <option value="A+">A+</option><option value="A-">A-</option>
+          <option value="B+">B+</option><option value="B-">B-</option>
+          <option value="O+">O+</option><option value="O-">O-</option>
+          <option value="AB+">AB+</option><option value="AB-">AB-</option>
+        </select>
+        <input type="text" id="dCity" placeholder="City / District" required>
+        <input type="tel" id="dPhone" placeholder="Contact Mobile Number" required>
+        <button type="submit" class="btn">❤️ Post Voluntary Donor Profile</button>
+      </form>
+    </div>
+
+    <!-- SEARCH DONORS & BANKS -->
+    <div id="search" class="card">
+      <h2>🔍 Real-Time Donor & Stock Search</h2>
+      <select id="filterGrp" onchange="filterDonors()">
+        <option value="ALL">All Blood Groups</option>
+        <option value="A+">A+</option><option value="B+">B+</option>
+        <option value="O+">O+</option><option value="O-">O-</option><option value="AB+">AB+</option>
+      </select>
+      <table>
+        <thead>
+          <tr><th>Name / Hospital</th><th>Type</th><th>Group</th><th>City</th><th>Contact</th></tr>
+        </thead>
+        <tbody id="donorTable">
+          <tr data-grp="O+"><td>John Doe</td><td>Individual Donor</td><td><strong style="color:#f87171;">O+</strong></td><td>Chennai</td><td>9876543210</td></tr>
+          <tr data-grp="A+"><td>City General Hospital</td><td>Blood Bank Stock</td><td><strong style="color:#f87171;">A+</strong></td><td>Chennai</td><td>044-2450123</td></tr>
+          <tr data-grp="B+"><td>Rajesh Kumar</td><td>Individual Donor</td><td><strong style="color:#f87171;">B+</strong></td><td>Coimbatore</td><td>9123456789</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- HOSPITAL MANAGEMENT -->
+    <div id="hospital" class="card">
+      <h2>🏥 Hospital Blood Stock Inventory Update</h2>
+      <div style="background:#450a0a; padding:20px; border-radius:12px; border:1px solid #7f1d1d;">
+        <h3>Update Blood Units Stock</h3>
+        <select id="hGrp">
+          <option value="A+">A+</option><option value="B+">B+</option><option value="O+">O+</option><option value="O-">O-</option>
+        </select>
+        <input type="number" id="hUnits" placeholder="Number of Available Units">
+        <button class="btn" style="background:linear-gradient(135deg, #10b981, #047857);" onclick="updateStock()">💾 Save Inventory Update</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function regDonor() {
+      let name = document.getElementById('dName').value;
+      let grp = document.getElementById('dGroup').value;
+      let city = document.getElementById('dCity').value;
+      let phone = document.getElementById('dPhone').value;
+      let row = `<tr data-grp="${grp}"><td>${name}</td><td>Individual Donor</td><td><strong style="color:#f87171;">${grp}</strong></td><td>${city}</td><td>${phone}</td></tr>`;
+      document.getElementById('donorTable').innerHTML += row;
+      alert(`Donor Profile for ${name} (${grp}) Registered Successfully!`);
+    }
+    function filterDonors() {
+      let selected = document.getElementById('filterGrp').value;
+      document.querySelectorAll('#donorTable tr').forEach(row => {
+        let g = row.getAttribute('data-grp');
+        row.style.display = (selected === 'ALL' || g === selected) ? '' : 'none';
+      });
+    }
+    function updateStock() {
+      let grp = document.getElementById('hGrp').value;
+      let units = document.getElementById('hUnits').value;
+      if (units) alert(`Hospital Blood Bank updated: ${units} units of ${grp} added!`);
+    }
+  </script>
+</body>
+</html>

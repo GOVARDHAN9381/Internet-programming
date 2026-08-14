@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArtGallery - Painting Rating & Review Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #3b0764; color: #f3e8ff; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #a855f7, #7e22ce); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #1e0338; padding: 12px; gap: 12px; border-bottom: 1px solid #581c87; }
+    nav button { background: #581c87; color: #e9d5ff; border: 1px solid #a855f7; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #c084fc, #a855f7); color: #3b0764; border-color: transparent; box-shadow: 0 0 15px rgba(192, 132, 252, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #1e0338; border: 1px solid #581c87; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #c084fc; margin-bottom: 20px; border-bottom: 2px solid #581c87; padding-bottom: 10px; font-weight: 800; }
+    input, select, textarea { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #581c87; border-radius: 8px; background: #3b0764; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #a855f7, #7e22ce); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(168,85,247,0.4); }
+    .art-display { border: 2px dashed #a855f7; border-radius: 12px; padding: 20px; text-align: center; background: #3b0764; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🖼️ ArtGallery Painting Rating & Reviews</h1>
+    <p>Exhibit Artworks, Collect Reviews & Monetize Display Packages</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('customer')">Review Painting</button>
+    <button onclick="switchTab('owner')">Artist / Owner Package</button>
+    <button onclick="switchTab('admin')">Admin Analytics</button>
+  </nav>
+
+  <div class="container">
+    <!-- CUSTOMER REVIEW -->
+    <div id="customer" class="card active">
+      <h2>🎨 Rate Featured Painting</h2>
+      <div class="art-display">
+        <h2 style="color:#c084fc; border:none; margin-bottom:5px;">"Sunset Reflections" by Clara Vance</h2>
+        <p style="color:#e9d5ff; font-size:13px;">Featured Exhibition Piece • Oil on Linen</p>
+        <p style="font-size:22px; font-weight:800; color:#fbbf24; margin-top:10px;">Average Rating: ★★★★☆ (4.5 / 5)</p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); submitRating();">
+        <select id="starRating" required>
+          <option value="5">★★★★★ (5 Stars - Exceptional)</option>
+          <option value="4">★★★★☆ (4 Stars - Great)</option>
+          <option value="3">★★★☆☆ (3 Stars - Average)</option>
+        </select>
+        <textarea id="revText" rows="3" placeholder="Write positive or constructive feedback..." required></textarea>
+        <button type="submit" class="btn">⭐ Submit Patron Review</button>
+      </form>
+
+      <h3 style="margin-top:25px; color:#c084fc;">Recent Patron Reviews</h3>
+      <div id="reviewList" style="margin-top:10px; color:#e9d5ff; line-height:1.7;">
+        <p>💬 <strong>User101 (★★★★★):</strong> Masterful brushwork and vibrant color choices!</p>
+      </div>
+    </div>
+
+    <!-- OWNER PACKAGE -->
+    <div id="owner" class="card">
+      <h2>💼 Submit Painting & Exhibition Package</h2>
+      <form onsubmit="event.preventDefault(); buyPackage();">
+        <input type="text" id="pTitle" placeholder="Painting Title" required>
+        <select id="pkgChoice">
+          <option value="7 Days Exhibition (₹500)">7 Days Exhibition Package - ₹500</option>
+          <option value="30 Days Exhibition (₹1800)">30 Days Exhibition Package - ₹1,800</option>
+        </select>
+        <button type="submit" class="btn" style="background:linear-gradient(135deg, #10b981, #059669);">💳 Pay & List Painting</button>
+      </form>
+    </div>
+
+    <!-- ADMIN ANALYTICS -->
+    <div id="admin" class="card">
+      <h2>📊 Review Sentiment Summary</h2>
+      <div style="background:#3b0764; padding:20px; border-radius:12px; border:1px solid #581c87; line-height:1.7;">
+        <p>Positive Feedback Ratio: <strong style="color:#34d399;">88%</strong></p>
+        <p>Total Revenue from Packages: <strong style="color:#c084fc;">₹ 24,500</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function submitRating() {
+      let stars = document.getElementById('starRating').value;
+      let text = document.getElementById('revText').value;
+      let html = `<p style="margin-top:5px;">💬 <strong>Patron (★${stars}):</strong> ${text}</p>`;
+      document.getElementById('reviewList').innerHTML += html;
+      alert("Thank you for your rating!");
+    }
+    function buyPackage() {
+      let title = document.getElementById('pTitle').value;
+      let pkg = document.getElementById('pkgChoice').value;
+      if (title) alert(`Painting "${title}" successfully listed under package: ${pkg}!`);
+    }
+  </script>
+</body>
+</html>

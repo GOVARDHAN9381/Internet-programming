@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EB Electricity Bill Payment & Tariff Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #422006; color: #fef08a; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #eab308, #ca8a04); color: #422006; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(234, 179, 8, 0.3); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #1c0d02; padding: 12px; gap: 12px; border-bottom: 1px solid #713f12; }
+    nav button { background: #713f12; color: #fef08a; border: 1px solid #eab308; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #fef08a, #eab308); color: #422006; border-color: transparent; box-shadow: 0 0 15px rgba(254, 240, 138, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #1c0d02; border: 1px solid #713f12; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #fef08a; margin-bottom: 20px; border-bottom: 2px solid #713f12; padding-bottom: 10px; font-weight: 800; }
+    input, select { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #713f12; border-radius: 8px; background: #422006; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #eab308, #ca8a04); color: #422006; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(234,179,8,0.4); }
+    .calc-box { background: #422006; border: 1px solid #713f12; border-radius: 12px; padding: 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚡ TNEB Electricity Bill Payment Portal</h1>
+    <p>Domestic & Commercial Tariff Calculation with Late Fee Penalty</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('cust')">Customer Bill Pay</button>
+    <button onclick="switchTab('admin')">Admin Tariff Formula</button>
+  </nav>
+
+  <div class="container">
+    <!-- CUSTOMER BILL PAYMENT -->
+    <div id="cust" class="card active">
+      <h2>🔌 Calculate & Pay EB Bill</h2>
+      <form onsubmit="event.preventDefault(); calcEBBill();">
+        <input type="text" id="consumerNo" placeholder="Consumer Connection No (e.g., EB-90812)" required>
+        <select id="connType" required>
+          <option value="domestic">Domestic Connection</option>
+          <option value="commercial">Commercial Connection</option>
+        </select>
+        <input type="number" id="unitsConsumed" placeholder="Units Consumed (kWh)" required>
+        <input type="number" id="overdueDays" placeholder="Overdue Days after Due Date (0 if none)" value="0">
+        <button type="submit" class="btn">⚡ Calculate Tariff Bill</button>
+      </form>
+
+      <div class="calc-box" id="ebResult" style="display:none;">
+        <h3 style="color:#fef08a;">🧾 Electricity Bill Breakdown</h3>
+        <p style="margin-top:10px;">Base Energy Charge: <strong>₹ <span id="baseCharge">0</span></strong></p>
+        <p style="margin-top:5px;">Late Fee Penalty (₹10/day): <strong>₹ <span id="fineCharge">0</span></strong></p>
+        <h2 style="color:#4ade80; border:none; margin-top:15px;">Total Bill Payable: ₹ <span id="totalBill">0</span></h2>
+        <button class="btn" style="background:linear-gradient(135deg, #10b981, #059669); color:white; margin-top:15px;" onclick="payEB()">💳 Pay Online Now</button>
+      </div>
+    </div>
+
+    <!-- ADMIN FORMULA -->
+    <div id="admin" class="card">
+      <h2>⚙️ Government Tariff Slabs & Rules</h2>
+      <div style="background:#422006; padding:20px; border-radius:12px; border:1px solid #713f12; line-height:1.7;">
+        <h3>Domestic Tariff Slabs:</h3>
+        <p>• 1-100 units: ₹1.00/unit | 101-200 units: ₹2.50/unit</p>
+        <p>• 201-500 units: ₹4.00/unit | 501+ units: ₹6.00/unit</p>
+        <h3 style="margin-top:15px;">Commercial Tariff Slabs:</h3>
+        <p>• 1-100 units: ₹2.00/unit | 101-200 units: ₹4.50/unit</p>
+        <p>• 201-500 units: ₹6.00/unit | 501+ units: ₹7.00/unit</p>
+        <p style="margin-top:15px; font-weight:800; color:#f87171;">Late Fee Penalty Rule: ₹10 per day added after due date.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function calcEBBill() {
+      let type = document.getElementById('connType').value;
+      let units = parseFloat(document.getElementById('unitsConsumed').value) || 0;
+      let days = parseInt(document.getElementById('overdueDays').value) || 0;
+      let base = 0;
+
+      if (type === 'domestic') {
+        if (units <= 100) base = units * 1.0;
+        else if (units <= 200) base = (100 * 1.0) + ((units - 100) * 2.50);
+        else if (units <= 500) base = (100 * 1.0) + (100 * 2.50) + ((units - 200) * 4.0);
+        else base = (100 * 1.0) + (100 * 2.50) + (300 * 4.0) + ((units - 500) * 6.0);
+      } else {
+        if (units <= 100) base = units * 2.0;
+        else if (units <= 200) base = (100 * 2.0) + ((units - 100) * 4.50);
+        else if (units <= 500) base = (100 * 2.0) + (100 * 4.50) + ((units - 200) * 6.0);
+        else base = (100 * 2.0) + (100 * 4.50) + (300 * 6.0) + ((units - 500) * 7.0);
+      }
+
+      let fine = days * 10;
+      let total = base + fine;
+
+      document.getElementById('baseCharge').innerText = base.toFixed(2);
+      document.getElementById('fineCharge').innerText = fine.toFixed(2);
+      document.getElementById('totalBill').innerText = total.toFixed(2);
+      document.getElementById('ebResult').style.display = 'block';
+    }
+    function payEB() {
+      alert("⚡ Bill Payment Processed Successfully! Receipt emailed.");
+    }
+  </script>
+</body>
+</html>

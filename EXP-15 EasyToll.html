@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyToll - Smart Express Toll & e-Pass Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #0b0f19; color: #f3f4f6; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0, 114, 255, 0.3); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    header p { opacity: 0.9; font-size: 14px; margin-top: 5px; }
+    nav { display: flex; justify-content: center; background: #111827; padding: 12px; gap: 12px; border-bottom: 1px solid #1f2937; }
+    nav button { background: #1f2937; color: #9ca3af; border: 1px solid #374151; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; border-color: transparent; box-shadow: 0 0 15px rgba(0, 198, 255, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #38bdf8; margin-bottom: 20px; border-bottom: 2px solid #1f2937; padding-bottom: 10px; font-weight: 800; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 15px; }
+    .info-box { background: linear-gradient(145deg, #1f2937, #111827); padding: 20px; border-radius: 12px; border-left: 5px solid #00c6ff; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    .info-box h3 { color: #93c5fd; margin-bottom: 10px; font-size: 16px; }
+    .balance-tag { font-size: 32px; font-weight: 800; color: #10b981; margin: 10px 0; text-shadow: 0 0 10px rgba(16,185,129,0.3); }
+    input, select { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #374151; border-radius: 8px; background: #0b0f19; color: white; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: #38bdf8; box-shadow: 0 0 8px rgba(56,189,248,0.4); }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(16,185,129,0.4); }
+    .qr-box { text-align: center; padding: 25px; background: #1f2937; border: 2px dashed #00c6ff; border-radius: 16px; margin-top: 20px; }
+    .qr-code { font-family: monospace; font-size: 18px; color: #38bdf8; background: #0b0f19; padding: 15px; border-radius: 8px; display: inline-block; margin: 12px 0; letter-spacing: 2px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #1f2937; }
+    th { background: #1f2937; color: #38bdf8; font-weight: 700; }
+    .badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; background: #10b981; color: white; display: inline-block; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🚗 EasyToll Express Pass & eWallet</h1>
+    <p>Smart Automated Toll Payments & Instant QR Gate Clearance</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('user')">User Dashboard</button>
+    <button onclick="switchTab('admin')">Admin Toll Control</button>
+    <button onclick="switchTab('tollgate')">Toll Operator Verifier</button>
+  </nav>
+
+  <div class="container">
+    <!-- USER DASHBOARD -->
+    <div id="user" class="card active">
+      <h2>👤 Traveler eWallet & Pass Purchase</h2>
+      <div class="grid">
+        <div class="info-box">
+          <h3>Current eWallet Balance</h3>
+          <div class="balance-tag" id="walletBalance">₹ 1,500.00</div>
+          <input type="number" id="addAmount" placeholder="Enter Recharge Amount (₹)">
+          <button class="btn" onclick="addMoney()">💳 Top-Up eWallet</button>
+        </div>
+        <div class="info-box">
+          <h3>Apply Digital Toll Pass</h3>
+          <input type="text" id="vehNo" placeholder="Vehicle Reg No (e.g. TN-01-AB-1234)">
+          <select id="passType">
+            <option value="Daily Pass (₹100)">Daily Pass - ₹100</option>
+            <option value="Monthly Express Pass (₹1200)">Monthly Express Pass - ₹1,200</option>
+          </select>
+          <button class="btn" style="background:linear-gradient(135deg, #3b82f6, #1d4ed8);" onclick="applyPass()">⚡ Buy Instant Pass</button>
+        </div>
+      </div>
+
+      <div class="qr-box" id="qrContainer" style="display:none;">
+        <h3 style="color:#10b981;">✅ Toll Pass Issued</h3>
+        <div class="qr-code" id="qrText"></div>
+        <div><span class="badge">ACTIVE & VERIFIED</span></div>
+      </div>
+    </div>
+
+    <!-- ADMIN CONTROL -->
+    <div id="admin" class="card">
+      <h2>🛠️ Toll Plaza Management & Approvals</h2>
+      <div class="info-box">
+        <h3>Add New Express Toll Plaza</h3>
+        <input type="text" id="tollName" placeholder="Toll Plaza Name (e.g. NH-44 Salem Express)">
+        <input type="number" id="tollRate" placeholder="Standard Ticket Rate (₹)">
+        <button class="btn" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9);" onclick="addToll()">➕ Register Toll Plaza</button>
+      </div>
+
+      <h3 style="margin-top:25px; color:#93c5fd;">Issued Toll Passes</h3>
+      <table>
+        <thead>
+          <tr><th>Pass ID</th><th>Vehicle No</th><th>Type</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody id="passTable">
+          <tr><td>TOLL-9081</td><td>KA-05-MN-4321</td><td>Monthly Pass</td><td><span class="badge">Approved</span></td><td><button style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;" onclick="this.parentElement.parentElement.remove()">Revoke</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TOLL OPERATOR VERIFIER -->
+    <div id="tollgate" class="card">
+      <h2>🔍 Gate Operator QR Verifier</h2>
+      <div class="info-box">
+        <h3>Scan or Type Pass QR Code</h3>
+        <input type="text" id="scanInput" placeholder="Scan Pass ID Code...">
+        <button class="btn" style="background:linear-gradient(135deg, #10b981, #047857);" onclick="verifyQR()">🔓 Verify & Open Barrier Gate</button>
+      </div>
+      <div id="verifyResult" style="margin-top:20px; font-weight:800; padding:15px; border-radius:10px; display:none; text-align:center; font-size:16px;"></div>
+    </div>
+  </div>
+
+  <script>
+    let wallet = 1500;
+    function switchTab(tabId) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function addMoney() {
+      let amt = parseFloat(document.getElementById('addAmount').value);
+      if (amt > 0) {
+        wallet += amt;
+        document.getElementById('walletBalance').innerText = '₹ ' + wallet.toFixed(2);
+        alert('₹' + amt + ' added to eWallet successfully!');
+      }
+    }
+    function applyPass() {
+      let veh = document.getElementById('vehNo').value;
+      let pass = document.getElementById('passType').value;
+      let cost = pass.includes('100') ? 100 : 1200;
+      if (!veh) { alert('Please enter Vehicle Number'); return; }
+      if (wallet < cost) { alert('Insufficient eWallet Balance!'); return; }
+      wallet -= cost;
+      document.getElementById('walletBalance').innerText = '₹ ' + wallet.toFixed(2);
+      let passId = 'TOLL-' + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('qrText').innerText = `[QR: ${passId} | ${veh} | ACTIVE]`;
+      document.getElementById('qrContainer').style.display = 'block';
+
+      let row = `<tr><td>${passId}</td><td>${veh}</td><td>${pass}</td><td><span class="badge">Approved</span></td><td><button style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:6px; font-weight:700;" onclick="this.parentElement.parentElement.remove()">Revoke</button></td></tr>`;
+      document.getElementById('passTable').innerHTML += row;
+      alert('Toll Pass Generated Successfully!');
+    }
+    function addToll() {
+      let name = document.getElementById('tollName').value;
+      let rate = document.getElementById('tollRate').value;
+      if (name && rate) alert(`Toll Plaza "${name}" created with Rate ₹${rate}`);
+    }
+    function verifyQR() {
+      let code = document.getElementById('scanInput').value;
+      let res = document.getElementById('verifyResult');
+      res.style.display = 'block';
+      if (code.length > 3) {
+        res.style.background = 'rgba(16, 185, 129, 0.2)'; res.style.color = '#34d399'; res.style.border = '1px solid #10b981';
+        res.innerText = `✅ VALID PASS: ${code} — Barrier Gate Opened! Have a Safe Journey.`;
+      } else {
+        res.style.background = 'rgba(239, 68, 68, 0.2)'; res.style.color = '#f87171'; res.style.border = '1px solid #ef4444';
+        res.innerText = `❌ INVALID TICKET CODE! Access Denied.`;
+      }
+    }
+  </script>
+</body>
+</html>

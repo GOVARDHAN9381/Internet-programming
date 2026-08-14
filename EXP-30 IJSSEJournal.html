@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IJSSE - Int. Journal of Scientific & Social Excellence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0b1726; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #1e3a5f, #0f2338); color: white; padding: 30px 20px; text-align: center; border-bottom: 3px solid #c5a059; box-shadow: 0 10px 30px rgba(197, 160, 89, 0.2); }
+    header h1 { font-family: 'Cinzel', serif; font-size: 26px; color: #f3e5ab; font-weight: 700; }
+    header p { opacity: 0.9; font-size: 13px; margin-top: 5px; color: #c5a059; }
+    nav { display: flex; justify-content: center; background: #0a131f; padding: 10px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid #1e3a5f; }
+    nav button { background: #1e3a5f; color: #f3e5ab; border: 1px solid #c5a059; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: #c5a059; color: #0b1726; border-color: transparent; box-shadow: 0 0 12px rgba(197, 160, 89, 0.4); transform: translateY(-2px); }
+    .container { max-width: 950px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #0f2338; border: 1px solid #1e3a5f; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { font-family: 'Cinzel', serif; color: #c5a059; margin-bottom: 20px; border-bottom: 1px solid #1e3a5f; padding-bottom: 10px; }
+    input, textarea { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #1e3a5f; border-radius: 8px; background: #0b1726; color: white; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #c5a059, #a37e36); color: #0b1726; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { background: #f3e5ab; transform: translateY(-2px); }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #1e3a5f; font-size: 14px; }
+    th { background: #1e3a5f; color: #c5a059; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>International Journal of Scientific & Social Excellence</h1>
+    <p>Scopus Indexed • Print ISSN: 2395-1443 | Online ISSN: 2395-1451</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('about')">About Journal</button>
+    <button onclick="switchTab('authors')">For Authors</button>
+    <button onclick="switchTab('reviewers')">For Reviewers</button>
+    <button onclick="switchTab('editors')">Editorial Board</button>
+    <button onclick="switchTab('archive')">Articles & Archive</button>
+  </nav>
+
+  <div class="container">
+    <!-- ABOUT JOURNAL -->
+    <div id="about" class="card active">
+      <h2>📖 About the Journal</h2>
+      <p style="line-height:1.7; color:#cbd5e1;">IJSSE is a double-blind peer-reviewed international publication dedicated to advancing scientific research and social science excellence. Published quarterly with open-access indexing.</p>
+    </div>
+
+    <!-- FOR AUTHORS -->
+    <div id="authors" class="card">
+      <h2>📝 Author Manuscript Submission</h2>
+      <form onsubmit="event.preventDefault(); submitPaper();">
+        <input type="text" id="pTitle" placeholder="Manuscript Title" required>
+        <input type="text" id="pAuthor" placeholder="Corresponding Author Name" required>
+        <input type="email" id="pEmail" placeholder="Author Email Address" required>
+        <textarea rows="3" placeholder="Abstract Summary..." required></textarea>
+        <button type="submit" class="btn">📄 Submit Paper for Peer Review</button>
+      </form>
+    </div>
+
+    <!-- FOR REVIEWERS -->
+    <div id="reviewers" class="card">
+      <h2>🔍 Reviewer Portal & Articles under Review</h2>
+      <table>
+        <thead>
+          <tr><th>Paper ID</th><th>Title</th><th>Subject Category</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>IJSSE-2026-089</td><td>Machine Learning in Public Health</td><td>Computer Science</td><td>Under Peer Review</td></tr>
+          <tr><td>IJSSE-2026-092</td><td>Economic Trends in Renewable Energy</td><td>Social Economics</td><td>Review Complete</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- EDITORIAL BOARD -->
+    <div id="editors" class="card">
+      <h2>👨‍🏫 Editorial Board</h2>
+      <p style="margin-bottom:8px;"><strong>Editor-in-Chief:</strong> Prof. Dr. A. K. Sharma (Ph.D., IIT Madras)</p>
+      <p><strong>Associate Editor:</strong> Dr. Sarah Jenkins (Oxford University)</p>
+    </div>
+
+    <!-- ARTICLES ARCHIVE -->
+    <div id="archive" class="card">
+      <h2>📚 Current Issue Publications</h2>
+      <p style="color:#c5a059; margin-bottom:12px;"><strong>Vol. 12 No. 3 (2026): Current Issue</strong></p>
+      <ul style="line-height:1.8; color:#cbd5e1;">
+        <li>📄 <em>Advanced Deep Learning Models in Bio-Informatics</em> - Pages 101-115</li>
+        <li>📄 <em>Sustainable Agriculture & Soil Quality Indexing</em> - Pages 116-128</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function submitPaper() {
+      let t = document.getElementById('pTitle').value;
+      let id = 'IJSSE-2026-' + Math.floor(100 + Math.random() * 900);
+      alert(`Manuscript "${t}" submitted successfully!\nAssigned Paper ID: ${id}`);
+    }
+  </script>
+</body>
+</html>

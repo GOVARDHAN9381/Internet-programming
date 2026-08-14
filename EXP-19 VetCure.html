@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VetCure - Tele-Veterinary & Animal Health Care</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #042f2e; color: #ccfbf1; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #0d9488, #0f766e); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(13, 148, 136, 0.3); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #111827; padding: 12px; gap: 12px; border-bottom: 1px solid #134e4a; }
+    nav button { background: #134e4a; color: #99f6e4; border: 1px solid #0d9488; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #2dd4bf, #0d9488); color: #042f2e; border-color: transparent; box-shadow: 0 0 15px rgba(45, 212, 191, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #111827; border: 1px solid #134e4a; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #2dd4bf; margin-bottom: 20px; border-bottom: 2px solid #134e4a; padding-bottom: 10px; font-weight: 800; }
+    input, textarea, select { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #134e4a; border-radius: 8px; background: #042f2e; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #2dd4bf, #0d9488); color: #042f2e; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(45,212,191,0.4); }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #134e4a; font-size: 14px; }
+    th { background: #134e4a; color: #2dd4bf; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🐄 VetCure Tele-Veterinary Portal</h1>
+    <p>Connecting Farmers & Pet Owners with Expert Veterinary Care</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('farmer')">Farmer Consultation</button>
+    <button onclick="switchTab('doctor')">Doctor Diagnosis</button>
+    <button onclick="switchTab('diseases')">Disease Guide</button>
+  </nav>
+
+  <div class="container">
+    <!-- FARMER CONSULTATION -->
+    <div id="farmer" class="card active">
+      <h2>🐾 Submit Animal Health Case</h2>
+      <form onsubmit="event.preventDefault(); submitCase();">
+        <input type="text" id="animType" placeholder="Animal Type (e.g., Cattle, Sheep, Goat)" required>
+        <textarea id="symptoms" rows="3" placeholder="Describe Animal Symptoms & Health Issues..." required></textarea>
+        <select id="payMethod">
+          <option value="Govt CVH Free">Govt CVH Free Clinic</option>
+          <option value="Private Doctor - Bank Transfer (₹200)">Private Doctor - Bank Transfer (₹200)</option>
+          <option value="Private Doctor - Easypaisa / Mobile Wallet">Private Doctor - Easypaisa / Wallet</option>
+        </select>
+        <button type="submit" class="btn">🚀 Submit Case to Veterinary Doctor</button>
+      </form>
+
+      <h3 style="margin-top: 30px; color:#99f6e4;">My Medical History & Responses</h3>
+      <table>
+        <thead>
+          <tr><th>Case ID</th><th>Animal</th><th>Symptoms</th><th>Doctor Solution / Prescription</th></tr>
+        </thead>
+        <tbody id="caseTable">
+          <tr><td>VET-801</td><td>Cow</td><td>Fever & reduced milk yield</td><td>Administer Paracetamol 500mg, Rest for 3 days</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DOCTOR WORKSPACE -->
+    <div id="doctor" class="card">
+      <h2>🩺 Doctor Diagnosis & Prescription Panel</h2>
+      <div style="background:#042f2e; padding:20px; border-radius:12px; border:1px solid #134e4a;">
+        <h3>Respond to Case Request</h3>
+        <input type="text" id="respCaseId" placeholder="Case ID (e.g. VET-801)">
+        <textarea id="solInput" rows="3" placeholder="Enter Prescription & Medical Instructions..."></textarea>
+        <button class="btn" style="background:linear-gradient(135deg, #3b82f6, #1d4ed8); color:white;" onclick="postSolution()">💊 Post Solution / Prescription</button>
+      </div>
+    </div>
+
+    <!-- DISEASE ENCYCLOPEDIA -->
+    <div id="diseases" class="card">
+      <h2>📖 Common Livestock Diseases & Treatments</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-top:20px;">
+        <div style="border:1px solid #134e4a; border-radius:12px; padding:20px; background:#042f2e;">
+          <h3 style="color:#f87171;">🔴 Foot-and-Mouth Disease (FMD)</h3>
+          <p style="margin-top:8px;"><strong>Symptoms:</strong> Blisters on feet & mouth, fever.</p>
+          <p style="margin-top:5px; color:#99f6e4;"><strong>Treatment:</strong> Antiseptic foot wash & vaccination.</p>
+        </div>
+        <div style="border:1px solid #134e4a; border-radius:12px; padding:20px; background:#042f2e;">
+          <h3 style="color:#fbbf24;">🟡 Mastitis</h3>
+          <p style="margin-top:8px;"><strong>Symptoms:</strong> Udder swelling, abnormal milk.</p>
+          <p style="margin-top:5px; color:#99f6e4;"><strong>Treatment:</strong> Intramammary antibiotic infusion.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function submitCase() {
+      let anim = document.getElementById('animType').value;
+      let symp = document.getElementById('symptoms').value;
+      let id = 'VET-' + Math.floor(100 + Math.random() * 900);
+      let row = `<tr><td>${id}</td><td>${anim}</td><td>${symp}</td><td><span style="color:#fbbf24; font-weight:800;">Awaiting Doctor Response</span></td></tr>`;
+      document.getElementById('caseTable').innerHTML += row;
+      alert(`Case ${id} submitted to doctor successfully!`);
+    }
+    function postSolution() {
+      let id = document.getElementById('respCaseId').value;
+      let sol = document.getElementById('solInput').value;
+      if (id && sol) alert(`Prescription updated for Case ${id}!`);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ram Infotech - Laptop Sales, Service & Rental Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #0c4a6e; color: #f0f9ff; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #0284c7, #0369a1); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.3); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #075985; padding: 12px; gap: 12px; border-bottom: 1px solid #0369a1; }
+    nav button { background: #0369a1; color: #bae6fd; border: 1px solid #0284c7; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #38bdf8, #0284c7); color: #0c4a6e; border-color: transparent; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
+    .container { max-width: 950px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #075985; border: 1px solid #0369a1; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #38bdf8; margin-bottom: 20px; border-bottom: 2px solid #0369a1; padding-bottom: 10px; font-weight: 800; }
+    input, select { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #0369a1; border-radius: 8px; background: #0c4a6e; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #38bdf8, #0284c7); color: #0c4a6e; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56,189,248,0.4); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
+    .laptop-card { border: 1px solid #0369a1; border-radius: 12px; padding: 20px; background: #0c4a6e; text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #0369a1; font-size: 14px; }
+    th { background: #0369a1; color: #38bdf8; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>💻 Ram Infotech Laptop Sales, Repair & Rental</h1>
+    <p>Multi-Brand Laptops, Chip-Level Service & Rental Agreements</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('sales')">Laptop Store</button>
+    <button onclick="switchTab('services')">Service Request</button>
+    <button onclick="switchTab('rental')">Rental Agreements</button>
+    <button onclick="switchTab('admin')">Stock & Admin</button>
+  </nav>
+
+  <div class="container">
+    <!-- LAPTOP STORE -->
+    <div id="sales" class="card active">
+      <h2>💻 Premium Laptop Store</h2>
+      <div class="grid">
+        <div class="laptop-card">
+          <h3>Dell XPS 15</h3>
+          <p style="color:#bae6fd; font-size:13px; margin-top:5px;">Intel i7 • 16GB RAM • 512GB SSD</p>
+          <div style="font-weight:800; font-size:22px; color:#38bdf8; margin:10px 0;">₹ 78,000</div>
+          <button class="btn" onclick="alert('Purchased Dell XPS 15!')">🛒 Buy Laptop</button>
+        </div>
+        <div class="laptop-card">
+          <h3>Lenovo ThinkPad X1</h3>
+          <p style="color:#bae6fd; font-size:13px; margin-top:5px;">Intel i5 • 16GB RAM • 1TB SSD</p>
+          <div style="font-weight:800; font-size:22px; color:#38bdf8; margin:10px 0;">₹ 65,000</div>
+          <button class="btn" onclick="alert('Purchased Lenovo ThinkPad!')">🛒 Buy Laptop</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVICE REQUEST -->
+    <div id="services" class="card">
+      <h2>🔧 Book Laptop Repair Service</h2>
+      <form onsubmit="event.preventDefault(); bookRepair();">
+        <input type="text" id="custName" placeholder="Customer Name" required>
+        <input type="text" id="lapModel" placeholder="Laptop Brand & Model" required>
+        <select id="issueType">
+          <option value="Screen Replacement">Screen Replacement</option>
+          <option value="Battery / Charging Issue">Battery / Charging Issue</option>
+          <option value="Motherboard Repair">Motherboard Repair</option>
+        </select>
+        <button type="submit" class="btn">🛠️ Schedule Service Pickup</button>
+      </form>
+    </div>
+
+    <!-- RENTAL AGREEMENTS -->
+    <div id="rental" class="card">
+      <h2>📜 Corporate & Student Rental Agreements</h2>
+      <div style="background:#0c4a6e; padding:20px; border-radius:12px; border:1px solid #0369a1;">
+        <h3>Create Laptop Rental Agreement</h3>
+        <input type="text" id="rCompany" placeholder="Company / Student Name">
+        <input type="number" id="rQty" placeholder="Quantity of Laptops">
+        <input type="number" id="rMonths" placeholder="Rental Duration (Months)">
+        <button class="btn" style="background:linear-gradient(135deg, #10b981, #047857); color:white;" onclick="createRental()">📋 Generate Agreement</button>
+      </div>
+    </div>
+
+    <!-- ADMIN & STOCK -->
+    <div id="admin" class="card">
+      <h2>📊 Shop Inventory Maintenance</h2>
+      <table>
+        <thead>
+          <tr><th>Brand / Item</th><th>In Stock</th><th>Unit Price</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Dell Laptops</td><td>14 Units</td><td>₹ 65,000</td><td><span style="color:#34d399; font-weight:800;">In Stock</span></td></tr>
+          <tr><td>Lenovo Laptops</td><td>8 Units</td><td>₹ 55,000</td><td><span style="color:#fbbf24; font-weight:800;">Low Stock</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function bookRepair() {
+      let name = document.getElementById('custName').value;
+      let model = document.getElementById('lapModel').value;
+      let id = 'RAM-SRV-' + Math.floor(100 + Math.random() * 900);
+      alert(`Service Booked for ${name} (${model})!\nService Ticket ID: ${id}`);
+    }
+    function createRental() {
+      let comp = document.getElementById('rCompany').value;
+      let qty = document.getElementById('rQty').value;
+      if (comp && qty) alert(`Rental Agreement Created for ${comp} (${qty} Units)!`);
+    }
+  </script>
+</body>
+</html>

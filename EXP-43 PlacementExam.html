@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusPlacement - Online Exam & Evaluation Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #0c4a6e; color: #f0f9ff; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #0284c7, #0369a1); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.3); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #075985; padding: 12px; gap: 12px; border-bottom: 1px solid #0369a1; }
+    nav button { background: #0369a1; color: #bae6fd; border: 1px solid #0284c7; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #38bdf8, #0284c7); color: #0c4a6e; border-color: transparent; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #075985; border: 1px solid #0369a1; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #38bdf8; margin-bottom: 20px; border-bottom: 2px solid #0369a1; padding-bottom: 10px; font-weight: 800; }
+    .q-box { background: #0c4a6e; border: 1px solid #0369a1; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #38bdf8, #0284c7); color: #0c4a6e; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56,189,248,0.4); }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #0369a1; font-size: 14px; }
+    th { background: #0369a1; color: #38bdf8; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎓 Campus Placement Examination Portal</h1>
+    <p>Automated Assessment, Scoring & Merit Result Publishing</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('exam')">Attempt Exam</button>
+    <button onclick="switchTab('result')">My Scorecard & Rank</button>
+    <button onclick="switchTab('admin')">Admin Exam Scheduler</button>
+  </nav>
+
+  <div class="container">
+    <!-- CANDIDATE EXAM -->
+    <div id="exam" class="card active">
+      <h2>📝 Aptitude & Technical Placement Test</h2>
+      <div id="examForm">
+        <div class="q-box">
+          <p style="font-weight:700;">Q1. What is the time complexity of searching an element in a balanced Binary Search Tree?</p>
+          <label style="display:block; margin-top:8px;"><input type="radio" name="q1" value="A"> A) O(N)</label>
+          <label style="display:block; margin-top:4px;"><input type="radio" name="q1" value="B"> B) O(log N)</label>
+          <label style="display:block; margin-top:4px;"><input type="radio" name="q1" value="C"> C) O(1)</label>
+        </div>
+        <div class="q-box">
+          <p style="font-weight:700;">Q2. Which HTTP method is typically used to create a new resource?</p>
+          <label style="display:block; margin-top:8px;"><input type="radio" name="q2" value="A"> A) GET</label>
+          <label style="display:block; margin-top:4px;"><input type="radio" name="q2" value="B"> B) POST</label>
+          <label style="display:block; margin-top:4px;"><input type="radio" name="q2" value="C"> C) DELETE</label>
+        </div>
+        <button class="btn" onclick="submitExam()">🚀 Submit Exam Answers</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result" class="card">
+      <h2>📊 Exam Scorecard & Placement Status</h2>
+      <div style="background:#0c4a6e; padding:25px; border-radius:12px; border:1px solid #0369a1; text-align:center;">
+        <h3>Candidate Automated Scorecard</h3>
+        <h1 style="color:#34d399; margin:15px 0; font-size:42px; font-weight:800;" id="scoreDisplay">-- / 100</h1>
+        <p id="rankStatus" style="font-weight:700; color:#bae6fd;">Attempt exam to view score & placement eligibility.</p>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="admin" class="card">
+      <h2>⚙️ Admin Question & Result Publishing</h2>
+      <div style="background:#0c4a6e; padding:20px; border-radius:12px; border:1px solid #0369a1;">
+        <h3>Published Candidate Merit List</h3>
+        <table>
+          <thead>
+            <tr><th>Rank</th><th>Candidate Name</th><th>Score</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>#1</td><td>Rohan Sharma</td><td>95 / 100</td><td><span style="color:#34d399; font-weight:800;">Shortlisted</span></td></tr>
+            <tr><td>#2</td><td>Priya Patel</td><td>90 / 100</td><td><span style="color:#34d399; font-weight:800;">Shortlisted</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function submitExam() {
+      let q1 = document.querySelector('input[name="q1"]:checked')?.value;
+      let q2 = document.querySelector('input[name="q2"]:checked')?.value;
+      let score = 0;
+      if (q1 === 'B') score += 50;
+      if (q2 === 'B') score += 50;
+
+      document.getElementById('scoreDisplay').innerText = score + ' / 100';
+      document.getElementById('rankStatus').innerText = score >= 50 ? '🎉 Congratulations! You are SHORTLISTED for Technical Interviews.' : 'Better luck next time.';
+      alert(`Exam Submitted! Your Score: ${score}/100`);
+      switchTab('result');
+    }
+  </script>
+</body>
+</html>

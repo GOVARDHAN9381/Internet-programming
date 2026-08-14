@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhonePay - Mobile & Postpaid Bill Payment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: #042f2e; color: #ccfbf1; min-height: 100vh; padding-bottom: 40px; }
+    header { background: linear-gradient(135deg, #14b8a6, #0d9488); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px rgba(20, 184, 166, 0.4); }
+    header h1 { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+    nav { display: flex; justify-content: center; background: #111827; padding: 12px; gap: 12px; border-bottom: 1px solid #134e4a; }
+    nav button { background: #134e4a; color: #99f6e4; border: 1px solid #14b8a6; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+    nav button.active, nav button:hover { background: linear-gradient(135deg, #2dd4bf, #14b8a6); color: #042f2e; border-color: transparent; box-shadow: 0 0 15px rgba(45, 212, 191, 0.4); transform: translateY(-2px); }
+    .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+    .card { background: #111827; border: 1px solid #134e4a; border-radius: 16px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); display: none; }
+    .card.active { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h2 { color: #2dd4bf; margin-bottom: 20px; border-bottom: 2px solid #134e4a; padding-bottom: 10px; font-weight: 800; }
+    input, select { width: 100%; padding: 12px 16px; margin: 8px 0; border: 1px solid #134e4a; border-radius: 8px; background: #042f2e; color: white; font-size: 14px; outline: none; }
+    button.btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #2dd4bf, #14b8a6); color: #042f2e; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    button.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(45,212,191,0.4); }
+    .bill-box { background: #042f2e; border: 1px solid #134e4a; border-radius: 12px; padding: 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📱 PhonePay Postpaid Bill & Recharge</h1>
+    <p>View Monthly Cycle Bills, Late Fee Calculator & Instant Payments</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="switchTab('cust')">Customer Bill Pay</button>
+    <button onclick="switchTab('admin')">Admin Billing Rules</button>
+  </nav>
+
+  <div class="container">
+    <!-- CUSTOMER BILL PAY -->
+    <div id="cust" class="card active">
+      <h2>📞 Fetch & Pay Postpaid Phone Bill</h2>
+      <form onsubmit="event.preventDefault(); fetchBill();">
+        <input type="tel" id="mobileNo" placeholder="Mobile Number (e.g. 9876543210)" required>
+        <select id="operator">
+          <option value="Airtel Postpaid">Airtel Postpaid</option>
+          <option value="Jio Postpaid">Jio Postpaid</option>
+          <option value="Vi Postpaid">Vi Postpaid</option>
+        </select>
+        <button type="submit" class="btn">📱 Fetch Outstanding Bill</button>
+      </form>
+
+      <div class="bill-box" id="phoneBillResult" style="display:none;">
+        <h3 style="color:#2dd4bf;">🧾 Postpaid Bill Breakdown</h3>
+        <p style="margin-top:10px;">Current Billing Amount: <strong>₹ 599.00</strong></p>
+        <p style="margin-top:5px;">Late Fee Penalty (Overdue 3 Days @ ₹10/day): <strong>₹ 30.00</strong></p>
+        <h2 style="color:#34d399; border:none; margin:15px 0;">Total Payable Amount: ₹ 629.00</h2>
+        
+        <select id="payOption">
+          <option value="Credit / Debit Card">Credit / Debit Card</option>
+          <option value="UPI / GPay">UPI / GPay</option>
+          <option value="Net Banking">Net Banking</option>
+        </select>
+        <button class="btn" style="background:linear-gradient(135deg, #10b981, #059669); color:white; margin-top:12px;" onclick="payPhoneBill()">💳 Confirm & Pay ₹629.00</button>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="admin" class="card">
+      <h2>⚙️ Admin Monthly Cycle & Fine Rules</h2>
+      <div style="background:#042f2e; padding:20px; border-radius:12px; border:1px solid #134e4a; line-height:1.7;">
+        <p><strong>Billing Cycle:</strong> 1st of every month to 30th</p>
+        <p><strong>Due Date:</strong> 15th of following month</p>
+        <p style="color:#f87171; font-weight:800; margin-top:10px;">Late Fee Penalty: ₹10 added per day after due date.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+    function fetchBill() {
+      let mob = document.getElementById('mobileNo').value;
+      if (mob) {
+        document.getElementById('phoneBillResult').style.display = 'block';
+      }
+    }
+    function payPhoneBill() {
+      let opt = document.getElementById('payOption').value;
+      alert(`📱 Payment of ₹629.00 completed via ${opt}!\nReceipt sent to SMS & Email.`);
+    }
+  </script>
+</body>
+</html>
